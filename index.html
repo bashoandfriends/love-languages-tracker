@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Languages Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+    }
+
+    .app-container {
+        max-width: 400px;
+        margin: 0 auto;
+        background: white;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        padding: 20px 20px 30px;
+        text-align: center;
+        position: relative;
+    }
+
+    .header::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: white;
+        border-radius: 30px 30px 0 0;
+    }
+
+    .header h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    .header p {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+
+    .nav-tabs {
+        display: flex;
+        background: #f8f9fa;
+        margin: 20px 20px 0;
+        border-radius: 12px;
+        padding: 4px;
+    }
+
+    .nav-tab {
+        flex: 1;
+        padding: 12px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .nav-tab.active {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .tab-content {
+        display: none;
+        padding: 20px;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .love-language {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border: 2px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+
+    .love-language:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+    }
+
+    .language-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .language-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .language-title {
+        flex: 1;
+    }
+
+    .language-title h3 {
+        font-size: 18px;
+        margin-bottom: 2px;
+        color: #333;
+    }
+
+    .language-title p {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .counters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .counter {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .counter-label {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .counter-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-given {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        color: white;
+    }
+
+    .btn-given:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    .btn-received {
+        background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        color: #333;
+    }
+
+    .btn-received:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
+    }
+
+    .btn-remove {
+        background: linear-gradient(135deg, #ff7675, #d63031);
+        color: white;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .btn-remove:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 118, 117, 0.4);
+    }
+
+    .remove-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .progress-bars {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .progress-item {
+        margin-bottom: 20px;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .progress-title {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .progress-value {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: #f0f0f0;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.5s ease;
+        display: flex;
+    }
+
+    .progress-given {
+        background: linear-gradient(90deg, #4ecdc4, #44a08d);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .progress-received {
+        background: linear-gradient(90deg, #ffeaa7, #fdcb6e);
+        border-radius: 0 3px 3px 0;
+    }
+
+    .progress-legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+        font-size: 12px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+    }
+
+    .legend-given {
+        background: linear-gradient(90deg, #4ecdc4, #44a08d);
+    }
+
+    .legend-received {
+        background: linear-gradient(90deg, #ffeaa7, #fdcb6e);
+    }
+
+    .reset-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .reset-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .animate-pulse {
+        animation: pulse 0.3s ease;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .today-summary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .today-summary h3 {
+        margin-bottom: 10px;
+    }
+
+    .today-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 15px;
+    }
+
+    .today-stat {
+        text-align: center;
+    }
+
+    .today-stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .today-stat-label {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .chart-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .time-filter {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: 2px solid #667eea;
+        background: transparent;
+        color: #667eea;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn.active {
+        background: #667eea;
+        color: white;
+    }
+
+    .chart-data {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .chart-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .chart-entry:last-child {
+        border-bottom: none;
+    }
+
+    .entry-info {
+        flex: 1;
+    }
+
+    .entry-language {
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .entry-type {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .entry-time {
+        font-size: 12px;
+        color: #999;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 350px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .modal-subtitle {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .modal-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .modal-input:focus {
+        border-color: #667eea;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-btn-cancel {
+        background: #f8f9fa;
+        color: #666;
+    }
+
+    .modal-btn-confirm {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .no-data {
+        text-align: center;
+        color: #666;
+        padding: 40px 20px;
+        font-style: italic;
+    }
+
+    .entry-description {
+        font-size: 11px;
+        color: #888;
+        margin-top: 2px;
+        font-style: italic;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>💕 Love Languages</h1>
+            <p>Track your acts of love</p>
+        </div>
+
+```
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('tracker')">Tracker</button>
+        <button class="nav-tab" onclick="showTab('stats')">Stats</button>
+        <button class="nav-tab" onclick="showTab('chart')">Chart</button>
+    </div>
+
+    <div id="tracker" class="tab-content active">
+        <div class="today-summary">
+            <h3>Today's Love</h3>
+            <div class="today-stats">
+                <div class="today-stat">
+                    <div class="today-stat-number" id="todayGiven">0</div>
+                    <div class="today-stat-label">Given</div>
+                </div>
+                <div class="today-stat">
+                    <div class="today-stat-number" id="todayReceived">0</div>
+                    <div class="today-stat-label">Received</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loveLanguages"></div>
+    </div>
+
+    <div id="stats" class="tab-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalGiven">0</div>
+                <div class="stat-label">Total Given</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalReceived">0</div>
+                <div class="stat-label">Total Received</div>
+            </div>
+        </div>
+
+        <div class="progress-bars">
+            <h3 style="margin-bottom: 20px; text-align: center;">Love Languages Distribution</h3>
+            <div id="progressBars"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetData()">Reset All Data</button>
+    </div>
+
+    <div id="chart" class="tab-content">
+        <div class="chart-container">
+            <div class="chart-title">Love Languages Over Time</div>
+            
+            <div class="time-filter">
+                <button class="filter-btn active" onclick="filterChart('today')">Today</button>
+                <button class="filter-btn" onclick="filterChart('week')">This Week</button>
+                <button class="filter-btn" onclick="filterChart('month')">This Month</button>
+                <button class="filter-btn" onclick="filterChart('all')">All Time</button>
+            </div>
+
+            <div class="chart-data" id="chartData">
+                <div class="no-data">No data to display</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding description -->
+    <div id="descriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Describe this act</div>
+                <div class="modal-subtitle" id="modalSubtitle">What did you do?</div>
+            </div>
+            <input type="text" id="descriptionInput" class="modal-input" placeholder="e.g., gave a compliment, made dinner..." maxlength="50">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Skip</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmDescription()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loveLanguages = [
+        {
+            id: 'words',
+            name: 'Words of Affirmation',
+            description: 'Verbal expressions of love',
+            icon: '💬'
+        },
+        {
+            id: 'quality',
+            name: 'Quality Time',
+            description: 'Focused attention together',
+            icon: '⏰'
+        },
+        {
+            id: 'gifts',
+            name: 'Receiving Gifts',
+            description: 'Thoughtful presents',
+            icon: '🎁'
+        },
+        {
+            id: 'service',
+            name: 'Acts of Service',
+            description: 'Helpful actions',
+            icon: '🤝'
+        },
+        {
+            id: 'touch',
+            name: 'Physical Touch',
+            description: 'Physical affection',
+            icon: '🤗'
+        }
+    ];
+
+    let data = {};
+    let todayData = {};
+    let timelineData = [];
+    let currentFilter = 'today';
+    let pendingEntry = null;
+
+    function initializeData() {
+        const today = new Date().toDateString();
+        
+        // Load existing data or initialize
+        const savedData = JSON.parse(localStorage.getItem('loveLanguagesData') || '{}');
+        const savedTodayData = JSON.parse(localStorage.getItem('todayLoveData') || '{}');
+        const savedTimelineData = JSON.parse(localStorage.getItem('timelineLoveData') || '[]');
+        const savedDate = localStorage.getItem('lastDate');
+
+        // Reset today's data if it's a new day
+        if (savedDate !== today) {
+            todayData = {};
+            localStorage.setItem('lastDate', today);
+        } else {
+            todayData = savedTodayData;
+        }
+
+        data = savedData;
+        timelineData = savedTimelineData;
+
+        // Initialize missing languages
+        loveLanguages.forEach(lang => {
+            if (!data[lang.id]) {
+                data[lang.id] = { given: 0, received: 0 };
+            }
+            if (!todayData[lang.id]) {
+                todayData[lang.id] = { given: 0, received: 0 };
+            }
+        });
+
+        saveData();
+    }
+
+    function saveData() {
+        localStorage.setItem('loveLanguagesData', JSON.stringify(data));
+        localStorage.setItem('todayLoveData', JSON.stringify(todayData));
+        localStorage.setItem('timelineLoveData', JSON.stringify(timelineData));
+    }
+
+    function renderTracker() {
+        const container = document.getElementById('loveLanguages');
+        container.innerHTML = '';
+
+        loveLanguages.forEach(lang => {
+            const langData = data[lang.id];
+            const div = document.createElement('div');
+            div.className = 'love-language';
+            div.innerHTML = `
+                <div class="language-header">
+                    <div class="language-icon">${lang.icon}</div>
+                    <div class="language-title">
+                        <h3>${lang.name}</h3>
+                        <p>${lang.description}</p>
+                    </div>
+                </div>
+                <div class="counters">
+                    <div class="counter">
+                        <div class="counter-label">Given</div>
+                        <div class="counter-value">${langData.given}</div>
+                    </div>
+                    <div class="counter">
+                        <div class="counter-label">Received</div>
+                        <div class="counter-value">${langData.received}</div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-given" onclick="increment('${lang.id}', 'given')">
+                        I Gave ${lang.icon}
+                    </button>
+                    <button class="btn btn-received" onclick="increment('${lang.id}', 'received')">
+                        I Received ${lang.icon}
+                    </button>
+                </div>
+                <div class="remove-buttons">
+                    <button class="btn btn-remove" onclick="decrement('${lang.id}', 'given')" ${langData.given === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                        Remove Given
+                    </button>
+                    <button class="btn btn-remove" onclick="decrement('${lang.id}', 'received')" ${langData.received === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                        Remove Received
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        updateTodaySummary();
+    }
+
+    function increment(languageId, type) {
+        // Store pending entry data
+        pendingEntry = {
+            languageId: languageId,
+            type: type,
+            button: event.target
+        };
+
+        // Show modal
+        showDescriptionModal(languageId, type);
+    }
+
+    function showDescriptionModal(languageId, type) {
+        const language = loveLanguages.find(lang => lang.id === languageId);
+        const modal = document.getElementById('descriptionModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+        const input = document.getElementById('descriptionInput');
+
+        modalTitle.textContent = `${language.icon} ${language.name}`;
+        modalSubtitle.textContent = type === 'given' ? 'What did you do?' : 'What did you receive?';
+        
+        input.value = '';
+        input.focus();
+        
+        modal.classList.add('show');
+
+        // Handle Enter key
+        input.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                confirmDescription();
+            }
+        };
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('descriptionModal');
+        modal.classList.remove('show');
+        pendingEntry = null;
+    }
+
+    function confirmDescription() {
+        if (!pendingEntry) return;
+
+        const description = document.getElementById('descriptionInput').value.trim();
+        
+        // Complete the increment with description
+        completeIncrement(pendingEntry.languageId, pendingEntry.type, description, pendingEntry.button);
+        
+        closeModal();
+    }
+
+    function completeIncrement(languageId, type, description, button) {
+        data[languageId][type]++;
+        todayData[languageId][type]++;
+        
+        // Add to timeline with description
+        const now = new Date();
+        timelineData.push({
+            id: Date.now() + Math.random(), // Unique ID for removal
+            languageId: languageId,
+            type: type,
+            description: description,
+            timestamp: now.toISOString(),
+            date: now.toDateString(),
+            time: now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            })
+        });
+        
+        // Animate the button
+        button.classList.add('animate-pulse');
+        setTimeout(() => {
+            button.classList.remove('animate-pulse');
+        }, 300);
+
+        saveData();
+        renderTracker();
+        updateStats();
+        updateChart();
+    }
+
+    function decrement(languageId, type) {
+        if (data[languageId][type] > 0) {
+            data[languageId][type]--;
+            todayData[languageId][type] = Math.max(0, todayData[languageId][type] - 1);
+            
+            // Remove the most recent entry of this type from timeline
+            for (let i = timelineData.length - 1; i >= 0; i--) {
+                if (timelineData[i].languageId === languageId && timelineData[i].type === type) {
+                    timelineData.splice(i, 1);
+                    break;
+                }
+            }
+            
+            // Animate the button
+            event.target.classList.add('animate-pulse');
+            setTimeout(() => {
+                event.target.classList.remove('animate-pulse');
+            }, 300);
+
+            saveData();
+            renderTracker();
+            updateStats();
+            updateChart();
+        }
+    }
+
+    function updateTodaySummary() {
+        let totalGiven = 0;
+        let totalReceived = 0;
+
+        Object.values(todayData).forEach(lang => {
+            totalGiven += lang.given;
+            totalReceived += lang.received;
+        });
+
+        document.getElementById('todayGiven').textContent = totalGiven;
+        document.getElementById('todayReceived').textContent = totalReceived;
+    }
+
+    function updateStats() {
+        let totalGiven = 0;
+        let totalReceived = 0;
+        let maxTotal = 0;
+
+        Object.values(data).forEach(lang => {
+            const total = lang.given + lang.received;
+            totalGiven += lang.given;
+            totalReceived += lang.received;
+            if (total > maxTotal) maxTotal = total;
+        });
+
+        document.getElementById('totalGiven').textContent = totalGiven;
+        document.getElementById('totalReceived').textContent = totalReceived;
+
+        // Update progress bars
+        const progressContainer = document.getElementById('progressBars');
+        progressContainer.innerHTML = '';
+
+        loveLanguages.forEach(lang => {
+            const langData = data[lang.id];
+            const total = langData.given + langData.received;
+            const givenPercentage = maxTotal > 0 ? (langData.given / maxTotal) * 100 : 0;
+            const receivedPercentage = maxTotal > 0 ? (langData.received / maxTotal) * 100 : 0;
+
+            const div = document.createElement('div');
+            div.className = 'progress-item';
+            div.innerHTML = `
+                <div class="progress-header">
+                    <span class="progress-title">${lang.icon} ${lang.name}</span>
+                    <span class="progress-value">${langData.given}G + ${langData.received}R = ${total}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill">
+                        <div class="progress-given" style="width: ${givenPercentage > 0 ? (givenPercentage / (givenPercentage + receivedPercentage)) * 100 : 0}%"></div>
+                        <div class="progress-received" style="width: ${receivedPercentage > 0 ? (receivedPercentage / (givenPercentage + receivedPercentage)) * 100 : 0}%"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Set the overall width of the combined bar
+            const progressFill = div.querySelector('.progress-fill');
+            progressFill.style.width = `${givenPercentage + receivedPercentage}%`;
+            
+            progressContainer.appendChild(div);
+        });
+    }
+
+    function updateChart() {
+        const chartContainer = document.getElementById('chartData');
+        let filteredData = [];
+
+        const now = new Date();
+        const today = now.toDateString();
+
+        switch(currentFilter) {
+            case 'today':
+                filteredData = timelineData.filter(entry => entry.date === today);
+                break;
+            case 'week':
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                filteredData = timelineData.filter(entry => new Date(entry.timestamp) >= weekAgo);
+                break;
+            case 'month':
+                const monthAgo = new Date();
+                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                filteredData = timelineData.filter(entry => new Date(entry.timestamp) >= monthAgo);
+                break;
+            case 'all':
+                filteredData = [...timelineData];
+                break;
+        }
+
+        if (filteredData.length === 0) {
+            chartContainer.innerHTML = '<div class="no-data">No data to display for this time period</div>';
+            return;
+        }
+
+        // Sort by timestamp (newest first)
+        filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        chartContainer.innerHTML = filteredData.map(entry => {
+            const language = loveLanguages.find(lang => lang.id === entry.languageId);
+            const entryDate = new Date(entry.timestamp);
+            const isToday = entry.date === today;
+            const displayDate = isToday ? 'Today' : entryDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+
+            return `
+                <div class="chart-entry">
+                    <div class="entry-info">
+                        <div class="entry-language">${language.icon} ${language.name}</div>
+                        <div class="entry-type">${entry.type === 'given' ? 'Given' : 'Received'}</div>
+                        ${entry.description ? `<div class="entry-description">"${entry.description}"</div>` : ''}
+                    </div>
+                    <div class="entry-time">
+                        ${displayDate} at ${entry.time}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function filterChart(filter) {
+        currentFilter = filter;
+        
+        // Update filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        updateChart();
+    }
+
+    function showTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName).classList.add('active');
+
+        if (tabName === 'stats') {
+            updateStats();
+        } else if (tabName === 'chart') {
+            updateChart();
+        }
+    }
+
+    function resetData() {
+        if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+            data = {};
+            todayData = {};
+            timelineData = [];
+            localStorage.removeItem('loveLanguagesData');
+            localStorage.removeItem('todayLoveData');
+            localStorage.removeItem('timelineLoveData');
+            initializeData();
+            renderTracker();
+            updateStats();
+            updateChart();
+        }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('descriptionModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    // Initialize the app
+    initializeData();
+    renderTracker();
+    updateStats();
+    updateChart();
+</script>
+```
+
+</body>
+</html>appendChild(div);
+            });
+        }
+
+```
+    function updateChart() {
+        const chartContainer = document.getElementById('chartData');
+        let filteredData = [];
+
+        const now = new Date();
+        const today = now.toDateString();
+
+        switch(currentFilter) {
+            case 'today':
+                filteredData = timelineData.filter(entry => entry.date === today);
+                break;
+            case 'week':
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                filteredData = timelineData.filter(entry => new Date(entry.timestamp) >= weekAgo);
+                break;
+            case 'month':
+                const monthAgo = new Date();
+                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                filteredData = timelineData.filter(entry => new Date(entry.timestamp) >= monthAgo);
+                break;
+            case 'all':
+                filteredData = [...timelineData];
+                break;
+        }
+
+        if (filteredData.length === 0) {
+            chartContainer.innerHTML = '<div class="no-data">No data to display for this time period</div>';
+            return;
+        }
+
+        // Sort by timestamp (newest first)
+        filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        chartContainer.innerHTML = filteredData.map(entry => {
+            const language = loveLanguages.find(lang => lang.id === entry.languageId);
+            const entryDate = new Date(entry.timestamp);
+            const isToday = entry.date === today;
+            const displayDate = isToday ? 'Today' : entryDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+
+            return `
+                <div class="chart-entry">
+                    <div class="entry-info">
+                        <div class="entry-language">${language.icon} ${language.name}</div>
+                        <div class="entry-type">${entry.type === 'given' ? 'Given' : 'Received'}</div>
+                        ${entry.description ? `<div class="entry-description">"${entry.description}"</div>` : ''}
+                    </div>
+                    <div class="entry-time">
+                        ${displayDate} at ${entry.time}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function filterChart(filter) {
+        currentFilter = filter;
+        
+        // Update filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        updateChart();
+    }
+
+    function showTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName).classList.add('active');
+
+        if (tabName === 'stats') {
+            updateStats();
+        } else if (tabName === 'chart') {
+            updateChart();
+        }
+    }
+
+    function resetData() {
+        if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+            data = {};
+            todayData = {};
+            timelineData = [];
+            localStorage.removeItem('loveLanguagesData');
+            localStorage.removeItem('todayLoveData');
+            localStorage.removeItem('timelineLoveData');
+            initializeData();
+            renderTracker();
+            updateStats();
+            updateChart();
+        }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('descriptionModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    // Initialize the app
+    initializeData();
+    renderTracker();
+    updateStats();
+    updateChart();
+</script>
+```
+
+</body>
+</html>
